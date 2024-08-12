@@ -3,14 +3,21 @@ import Link from "next/link";
 import { RiShoppingCart2Fill } from "react-icons/ri";
 import { useSelector, useDispatch } from "react-redux";
 import { addProduct } from "../../redux/cartSlice";
+import { signIn, useSession } from "next-auth/react";
 
 const MenuItem = ({ product }) => {
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
-
+  const { data: session } = useSession();
   const findCart = cart.products.find((item) => item._id === product._id);
 
   const addToCart = () => {
+    if (!session) {
+      alert("Please log in first to add items to the cart.");
+      signIn(); // Redirects to the sign-in page
+      return;
+    }
+
     dispatch(
       addProduct({
         ...product,

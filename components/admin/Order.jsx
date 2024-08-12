@@ -24,18 +24,29 @@ const Order = () => {
 
   const handleStatusNext = async (id) => {
     const item = orders.find((order) => order._id === id);
-    const currentStatus = item.status;
+    let currentStatus = item.status;
 
+    console.log("Current Status", currentStatus);
     try {
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`,
         { status: currentStatus + 1 }
       );
       setOrders([res.data, ...orders.filter((order) => order._id !== id)]);
+      if (currentStatus + 1 == 2) {
+        alert("Its True");
+        const res = await axios.put(
+          `${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`,
+          { Order: true }
+        );
+
+        console.log(res.data.Order);
+      }
     } catch (error) {
       console.log(error);
     }
   };
+
   const handleStatusPrior = async (id) => {
     const item = orders.find((order) => order._id === id);
     const currentStatus = item.status;
@@ -143,6 +154,9 @@ const Order = () => {
                     </td>
                     <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
                       {status[order?.status]}
+                      {status == "delivered"
+                        ? (order.order = true)
+                        : (order.order = false)}
                     </td>
                     <td className="py-4 px-1 font-small whitespace-nowrap hover:text-white flex gap-3">
                       <button

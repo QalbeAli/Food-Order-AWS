@@ -20,10 +20,17 @@ const Login = () => {
     try {
       const res = await signIn("credentials", options);
       actions.resetForm();
-      toast.success("Login successfully", {
-        position: "bottom-left",
-        theme: "colored",
-      });
+      if (res.error) {
+        toast.error("Login Failed", {
+          position: "bottom-left",
+          theme: "colored",
+        });
+      } else {
+        toast.success("Login successfully", {
+          position: "bottom-left",
+          theme: "colored",
+        });
+      }
     } catch (err) {
       console.log(err);
     }

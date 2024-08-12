@@ -1,12 +1,20 @@
 import axios from "axios";
 import Image from "next/image";
+import { useState } from "react";
+import ReviewForm from "../../components/Reviewform";
 
 const Order = ({ order }) => {
+  const [isReviewPopupOpen, setIsReviewPopupOpen] = useState(order.Order);
   const status = order?.status;
   const statusClass = (index) => {
     if (index - status < 1) return "";
     if (index - status === 1) return "animate-pulse";
     if (index - status > 1) return "";
+  };
+  const handleReviewSubmit = (review) => {
+    console.log("Review Submitted:", review);
+    // You can add an API call here to submit the review
+    setIsReviewPopupOpen(false); // Close the popup after submission
   };
   return (
     <div className="overflow-x-auto">
@@ -86,7 +94,14 @@ const Order = ({ order }) => {
               height={40}
               objectFit="contain"
             />
-            <span>Delivered</span>
+            {/* <span>Delivered</span> */}
+            {order.Order && isReviewPopupOpen && (
+              <ReviewForm
+                isOpen={isReviewPopupOpen}
+                onClose={() => setIsReviewPopupOpen(false)}
+                onSubmit={handleReviewSubmit}
+              />
+            )}
           </div>
         </div>
       </div>

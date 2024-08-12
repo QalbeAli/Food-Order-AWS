@@ -20,6 +20,10 @@ const OrderSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    // statuss: {
+    //   type: String,
+
+    // },
     method: {
       type: Number,
       required: true,
@@ -28,6 +32,10 @@ const OrderSchema = new mongoose.Schema(
       type: Array,
       required: true,
     },
+    Order: {
+      type: Boolean,
+      default: false
+    }
   },
   { timestamps: true }
 );
