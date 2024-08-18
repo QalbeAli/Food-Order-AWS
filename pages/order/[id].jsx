@@ -4,22 +4,26 @@ import { useState } from "react";
 import ReviewForm from "../../components/Reviewform";
 
 const Order = ({ order }) => {
-  const [isReviewPopupOpen, setIsReviewPopupOpen] = useState(order.Order);
+  const [isReviewPopupOpen, setIsReviewPopupOpen] = useState(false); // Start with the modal closed
   const status = order?.status;
+  console.log(status, "new nawa nawa status");
+
   const statusClass = (index) => {
     if (index - status < 1) return "";
     if (index - status === 1) return "animate-pulse";
     if (index - status > 1) return "";
   };
+
   const handleReviewSubmit = (review) => {
     console.log("Review Submitted:", review);
     // You can add an API call here to submit the review
     setIsReviewPopupOpen(false); // Close the popup after submission
   };
+
   return (
     <div className="overflow-x-auto">
-      <div className="min-h-[calc(100vh_-_433px)] flex  justify-center items-center flex-col p-10  min-w-[1000px]">
-        <div className=" flex items-center flex-1  w-full max-h-28">
+      <div className="min-h-[calc(100vh_-_433px)] flex justify-center items-center flex-col p-10 min-w-[1000px]">
+        <div className="flex items-center flex-1 w-full max-h-28">
           <table className="w-full text-sm text-center text-gray-500">
             <thead className="text-xs text-gray-400 uppercase bg-gray-700">
               <tr>
@@ -38,7 +42,7 @@ const Order = ({ order }) => {
               </tr>
             </thead>
             <tbody>
-              <tr className="transition-all bg-secondary border-gray-700 hover:bg-primary ">
+              <tr className="transition-all bg-secondary border-gray-700 hover:bg-primary">
                 <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center">
                   {order._id.substring(0, 5)}
                 </td>
@@ -94,12 +98,19 @@ const Order = ({ order }) => {
               height={40}
               objectFit="contain"
             />
-            {/* <span>Delivered</span> */}
-            {order.Order && isReviewPopupOpen && (
+            <span>Delivered</span>
+            <button
+              onClick={() => setIsReviewPopupOpen(true)}
+              className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none"
+            >
+              Write a Review
+            </button>
+            {isReviewPopupOpen && (
               <ReviewForm
                 isOpen={isReviewPopupOpen}
                 onClose={() => setIsReviewPopupOpen(false)}
                 onSubmit={handleReviewSubmit}
+                orderId={order._id}
               />
             )}
           </div>

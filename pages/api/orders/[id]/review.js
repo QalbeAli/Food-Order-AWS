@@ -1,42 +1,48 @@
-import dbConnect from '../../../../util/dbConnect';
-import Review from '../../../../models/Review';
-import Order from '../../../../models/Order';
-import { getSession } from 'next-auth/react';
+import dbConnect from "../../../../util/dbConnect";
+import Review from "../../../../models/Review";
+import Order from "../../../../models/Order";
 
 export default async function handler(req, res) {
   await dbConnect();
 
-  const session = await getSession({ req });
-  if (req.method === 'POST') {
+  if (req.method === "POST") {
     const { review, rating } = req.body;
     const { id } = req.query;
 
-    try {
+    // Validate request data
+    if (!review || typeof review !== 'string' || !rating || typeof rating !== 'number' || rating < 1 || rating > 5) {
+      console.error("Invalid request data:", { review, rating });
+      return res.status(400).json({ error: "Invalid review or rating" });
+    }
 
+    try {
       const order = await Order.findById(id);
 
-      if (order.status !== 'delivered') {
-        return res.status(400).json({ error: 'Order not delivered yet' });
+      if (!order) {
+        return res.status(404).json({ error: "Order not found" });
       }
-      if (!session) {
-        // User is not logged in
-        return res.status(401).json({ error: 'You must be logged in to access this resource' });
+
+      if (order.status !== 2) {
+        console.log("Order status:", order.status);
+        return res.status(400).json({ error: "Order not delivered yet" });
       }
+
       const newReview = new Review({
         orderId: id,
         review,
         rating,
-        userId: req.user.id,
+        // userId is not included anymore
       });
 
       await newReview.save();
 
-      res.status(200).json({ message: 'Review submitted successfully' });
+      res.status(200).json({ message: "Review submitted successfully" });
     } catch (error) {
-      res.status(500).json({ error: 'Failed to submit review' });
+      console.error("Error submitting review:", error);
+      res.status(500).json({ error: "Failed to submit review" });
     }
   } else {
-    res.setHeader('Allow', ['POST']);
+    res.setHeader("Allow", ["POST"]);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

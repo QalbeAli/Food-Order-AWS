@@ -112,6 +112,9 @@ const Header = () => {
           <a href="#" className="md:inline-block hidden sm">
             <button className="btn-primary">Order Online</button>
           </a>
+          <Link href="/admin" target="_blank" className="md:inline-block hidden sm">
+            <button className="bg-slate-700 py-2 px-6 rounded-full">Admin Dashboard</button>
+          </Link>
           <button
             className="sm:hidden inline-block"
             onClick={() => setIsMenuModal(true)}

@@ -1,14 +1,10 @@
-// models/Review.js
+import mongoose from 'mongoose';
 
-import mongoose from "mongoose";
-
-const { Schema } = mongoose;
-
-const reviewSchema = new Schema({
+const ReviewSchema = new mongoose.Schema({
   orderId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Order", // Assuming you have an Order model
     required: true,
+    ref: 'Order',
   },
   review: {
     type: String,
@@ -20,17 +16,6 @@ const reviewSchema = new Schema({
     min: 1,
     max: 5,
   },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Assuming you have a User model
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+}, { timestamps: true });
 
-const Review = mongoose.models.Review || mongoose.model("Review", reviewSchema);
-
-export default Review;
+export default mongoose.models.Review || mongoose.model('Review', ReviewSchema);
